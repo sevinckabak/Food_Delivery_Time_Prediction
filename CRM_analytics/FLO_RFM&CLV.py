@@ -44,7 +44,7 @@ pd.set_option("display.width", 500)
 pd.set_option("display.float_format", lambda x: "%.5f" % x)
 
 df_ = pd.read_csv(
-    r"/Python/pythonProgramlama/python_for_data_science/data_analysis_with_python/datasets/flo_data_20k.csv")
+    r"/Python/Python_Programming/python_for_data_science/data_analysis_with_python/datasets/flo_data_20k.csv")
 df = df_.copy()
 
 # 2. Veri setinde
@@ -242,7 +242,7 @@ pd.set_option("display.width", 500)
 pd.set_option("display.float_format", lambda x: "%.5f" % x)
 
 df_ = pd.read_csv(
-    r"/Python/pythonProgramlama/python_for_data_science/data_analysis_with_python/datasets/flo_data_20k.csv")
+    r"/Python/Python_Programming/python_for_data_science/data_analysis_with_python/datasets/flo_data_20k.csv")
 df = df_.copy()
 
 # 2. Aykırı değerleri baskılamak için gerekli olan outlier_thresholds ve replace_with_thresholds fonksiyonlarını tanımlayınız.

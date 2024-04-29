@@ -60,7 +60,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 pd.set_option("display.max_columns", None)
 pd.set_option("display.width", 500)
-df = pd.read_csv("../pythonProgramlama/python_for_data_science/data_analysis_with_python/datasets/persona.csv")
+df = pd.read_csv("../Python_Programming/python_for_data_science/data_analysis_with_python/datasets/persona.csv")
 df.head()
 df.info()
 df.describe().T
