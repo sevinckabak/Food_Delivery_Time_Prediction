@@ -67,6 +67,12 @@ df["total_cost_value"] = df["customer_value_total_ever_offline"] + df["customer_
 
 # 4. Değişken tiplerini inceleyiniz. Tarih ifade eden değişkenlerin tipini date'e çeviriniz.
 
+for col in df.columns:
+    if "date" in col:
+        df[col] = pd.to_datetime(df[col])
+
+# Mentör Çözümü
+
 date_columns = df.columns[df.columns.str.contains("date")]
 df[date_columns] = df[date_columns].apply(pd.to_datetime)
 
@@ -81,6 +87,9 @@ df.sort_values(by="total_cost_value", ascending=False).head(10)
 
 # 7. En fazla siparişi veren ilk 10 müşteriyi sıralayınız.
 df.sort_values(by="total_order", ascending=False).head(10)
+
+# Ek çözüm
+df.sort_values(by="total_order", ascending=False)["master_id"][:10]
 
 # 8. Veri ön hazırlık sürecini fonksiyonlaştırınız.
 
@@ -99,10 +108,9 @@ df.info()
 today_date= df["last_order_date"].max() + pd.Timedelta(days=2)
 
 rfm = pd.DataFrame()
-
 df["recency"] = [(today_date - date).days for date in df["last_order_date"]]
 
-# Diğer çözüm
+# Mentör Çözümü
 rfm["recency"] = (today_date - df["last_order_date"]).astype("timedelta64[D]")
 
 rfm = df[["master_id", "recency", "total_order", "total_cost_value"]]
@@ -165,7 +173,7 @@ women_df = new_df.loc[((new_df["segment"] == "loyal_customers") | (new_df["segme
 
 women_df.to_csv("women.csv")
 
-# Diğer Çözüm;
+# Mentör Çözümü;
 
 target_segment_cust_id = rfm[rfm["segment"].isin(["champions", "loyal_customers"])]["master_id"]
 
@@ -181,15 +189,46 @@ cust_ids.to_csv("cust_ids", index=False)
 target_segment_cust_id = rfm[(rfm["segment"].isin(["cant_loose", "hibernating", "new_customers"]))]["master_id"]
 
 
+# GÖREV 6: Tüm süreci fonksiyonlaştırınız.
+
+
+
+
 ##############################################################
 # BG-NBD ve Gamma-Gamma ile CLTV Prediction
 ##############################################################
+
+###############################################################
+# İş Problemi (Business Problem)
+###############################################################
+# FLO satış ve pazarlama faaliyetleri için roadmap belirlemek istemektedir.
+# Şirketin orta uzun vadeli plan yapabilmesi için var olan müşterilerin gelecekte şirkete sağlayacakları potansiyel değerin tahmin edilmesi gerekmektedir.
+
+
+###############################################################
+# Veri Seti Hikayesi
+###############################################################
+
+# Veri seti son alışverişlerini 2020 - 2021 yıllarında OmniChannel(hem online hem offline alışveriş yapan) olarak yapan müşterilerin geçmiş alışveriş davranışlarından
+# elde edilen bilgilerden oluşmaktadır.
+
+# master_id: Eşsiz müşteri numarası
+# order_channel : Alışveriş yapılan platforma ait hangi kanalın kullanıldığı (Android, ios, Desktop, Mobile, Offline)
+# last_order_channel : En son alışverişin yapıldığı kanal
+# first_order_date : Müşterinin yaptığı ilk alışveriş tarihi
+# last_order_date : Müşterinin yaptığı son alışveriş tarihi
+# last_order_date_online : Muşterinin online platformda yaptığı son alışveriş tarihi
+# last_order_date_offline : Muşterinin offline platformda yaptığı son alışveriş tarihi
+# order_num_total_ever_online : Müşterinin online platformda yaptığı toplam alışveriş sayısı
+# order_num_total_ever_offline : Müşterinin offline'da yaptığı toplam alışveriş sayısı
+# customer_value_total_ever_offline : Müşterinin offline alışverişlerinde ödediği toplam ücret
+# customer_value_total_ever_online : Müşterinin online alışverişlerinde ödediği toplam ücret
+# interested_in_categories_12 : Müşterinin son 12 ayda alışveriş yaptığı kategorilerin listesi
 
 
 ###############################################################
 # GÖREVLER
 ###############################################################
-
 # GÖREV 1: Veriyi Hazırlama
 
 # 1. flo_data_20K.csv verisini okuyunuz.Dataframe’in kopyasını oluşturunuz.
@@ -212,7 +251,6 @@ df = df_.copy()
 # aykırı değerleri varsa baskılayanız.
 # 4. Omnichannel müşterilerin hem online'dan hemde offline platformlardan alışveriş yaptığını ifade etmektedir. Herbir müşterinin toplam
 # alışveriş sayısı ve harcaması için yeni değişkenler oluşturun.
-
 def outlier_thresholds(dataframe, variable):
     quartile1 = dataframe[variable].quantile(0.01)
     quartile3 = dataframe[variable].quantile(0.99)
@@ -273,7 +311,7 @@ cltv_df["recency"] = cltv_df["recency"].astype("int64") / 7
 cltv_df.info()
 
 
-# Diğer Çözüm;
+# Mentör Çözümü
 cltv_df = pd.DataFrame
 
 cltv_df["customer_id"] = df["master_id"]
@@ -320,6 +358,16 @@ ggf.fit(cltv_df['frequency'], cltv_df['monetary'])
 
 cltv_df["exp_avrg_value"] = ggf.conditional_expected_average_profit(cltv_df['frequency'],
                                         cltv_df['monetary'])
+
+
+# GÖREV 4: CLTV'ye Göre Segmentlerin Oluşturulması
+           # 1. 6 aylık tüm müşterilerinizi 4 gruba (segmente) ayırınız ve grup isimlerini veri setine ekleyiniz. cltv_segment ismi ile dataframe'e ekleyiniz.
+           # 2. 4 grup içerisinden seçeceğiniz 2 grup için yönetime kısa kısa 6 aylık aksiyon önerilerinde bulununuz
+
+# BONUS: Tüm süreci fonksiyonlaştırınız.
+
+
+
 
 
 
